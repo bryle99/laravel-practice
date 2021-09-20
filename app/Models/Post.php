@@ -27,4 +27,16 @@ class Post extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    // polymorphic - one to many
+    public function photos()
+    {
+        return $this->morphMany('App\Models\Photo', 'imageable');
+    }
+
+    // polymorphic - many to many
+    public function tags()
+    {
+        return $this->morphToMany('App\Models\Tag', 'taggable');
+    }
 }

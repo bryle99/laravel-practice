@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Country;
+use App\Models\Photo;
+use App\Models\Video;
+use App\Models\Tag;
 
 /*
 |--------------------------------------------------------------------------
@@ -226,10 +229,91 @@ Route::get('/user/pivot', function () {
     }
 });
 
+// has through many
 Route::get('/user/country', function () {
     $country = Country::find('1');
 
     foreach ($country->posts as $post) {
         echo $post->title . '<br>';
+    }
+});
+
+// Polymorphic Relations
+Route::get('/user/{id}/photos', function ($id) {
+    $user = User::find($id);
+
+    foreach ($user->photos as $photo) {
+        echo $photo->path . '<br>';
+    }
+});
+
+Route::get('/post/{id}/photos', function ($id) {
+    $post = Post::find($id);
+
+    foreach ($post->photos as $photo) {
+        echo $photo->path . '<br>';
+    }
+});
+
+// Polymorphic inverse
+Route::get('/photo/{id}/inverse', function ($id) {
+    $photo = Photo::findOrFail($id);
+
+    return $imageable = $photo->imageable;
+});
+
+// Polymorphic many to many relations
+Route::get('/post/{id}/tag', function ($id) {
+    $post = Post::find($id);
+
+    foreach ($post->tags as $tag) {
+        echo $tag->name;
+    }
+});
+
+Route::get('/video/{id}/tag', function ($id) {
+    $vid = Video::find($id);
+
+    foreach ($vid->tags as $tag) {
+        echo $tag->name;
+    }
+});
+
+// Polymorphic many to many inverse
+Route::get('/tag/{id}/post', function ($id) {
+    $tag = Tag::findOrFail($id);
+
+    foreach ($tag->posts as $post) {
+        echo $post->title;
+    }
+});
+
+Route::get('/tag/{id}/video', function ($id) {
+    $tag = Tag::findOrFail($id);
+
+    foreach ($tag->videos as $vid) {
+        echo $vid->name;
+    }
+});
+
+// get all posts with tags
+Route::get('/tag/posts', function () {
+    $tags = Tag::all();
+
+    foreach ($tags as $tag) {
+        foreach ($tag->posts as $post) {
+            echo $tag->name . ' - ' .  $post->title;
+        }
+    }
+});
+
+// get all videos with tags
+Route::get('/tag/videos', function () {
+    $tags = Tag::all();
+
+    foreach ($tags as $tag) {
+        foreach ($tag->videos as $video) {
+            echo $tag->name . ' - ' .  $video->name;
+        }
     }
 });

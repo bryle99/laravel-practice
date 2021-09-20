@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Photo extends Model
+class Video extends Model
 {
     use HasFactory;
 
-    // polymorphic
-    public function imageable()
+    // polymorphic - many to many
+    public function tags()
     {
-        return $this->morphTo();
+        return $this->morphToMany('App\Models\Tag', 'taggable');
     }
 }
