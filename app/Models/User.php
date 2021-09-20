@@ -41,4 +41,27 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // one to one relationship user => post
+    public function post()
+    {
+        return $this->hasOne('App\Models\Post');
+        // finds user_id by default
+        // return $this->hasOne('Post', 'user_id');
+        // to specify reference id column
+    }
+
+    // one to many relationship user => post
+    public function posts()
+    {
+        return $this->hasMany('App\Models\Post');
+    }
+
+    // many to many relationship user => role
+    public function roles()
+    {
+        // return $this->belongsToMany('App\Models\Role', 'role_user', 'user_id', 'role_id');
+
+        return $this->belongsToMany('App\Models\Role')->withPivot('created_at');
+    }
 }
