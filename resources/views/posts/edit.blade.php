@@ -8,11 +8,16 @@
             {{-- <input type="text" name="title" placeholder="Enter title" value="{{$post->title}}">
             <input type="submit" value="UPDATE"> --}}
         {{-- </form> --}}
-       {!! Form::model($post, ['method' => 'PATCH', 'action' => ['\App\Http\Controllers\PostsController@update', $post->id]]) !!}
+       {!! Form::model($post, ['method' => 'PATCH', 'action' => ['\App\Http\Controllers\PostsController@update', $post->id], 'files' => true]) !!}
             {{ csrf_field() }}
             {!! Form::label('title', 'Title') !!}
             {!! Form::text('title', $post->title, ['class' => 'form-control']) !!}
             {!! Form::submit('Update Post', ['class' => 'btn btn-primary']) !!}
+            <br>
+            <br>
+            <div class="form-group">
+                {!! Form::file('file', ['class' => 'form-control']) !!}
+            </div>
         {!! Form::close() !!}
         <br>
         {{-- <form method="POST" action="/posts/{{$post->id}}"> --}}

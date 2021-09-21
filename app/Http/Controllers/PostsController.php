@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreatePostRequest;
 use Illuminate\Http\Request;
 use App\Models\Post;
+use PhpParser\Node\Stmt\Echo_;
 
 class PostsController extends Controller
 {
@@ -39,20 +40,40 @@ class PostsController extends Controller
      */
     public function store(CreatePostRequest $request)
     {
-        //
-        // return $request->get('title');
 
-        // $this->validate($request, [
-        //     'title' => 'required'
-        // ]);
+        $input = $request->all();
 
-        Post::create($request->all());
+        if ($file = $request->file('file')) {
+            $name = $file->getClientOriginalName();
+            // create images folder in public folder if it doesnt exist
+            $file->move('images', $name);
+            // path is a column in posts table
+            $input['path'] = $name;
+        }
+
+        Post::create($input);
+
+        // files
+        // $file = $request->file('file');
+
+        // echo '<br>';
+
+        // echo $file->getClientOriginalName();
+
+        // //
+        // // return $request->get('title');
+
+        // // $this->validate($request, [
+        // //     'title' => 'required'
+        // // ]);
+
+        // Post::create($request->all());
 
         return redirect('/posts');
 
-        // $post = new Post;
-        // $post->title = $request->title;
-        // $post->save();
+        // // $post = new Post;
+        // // $post->title = $request->title;
+        // // $post->save();
 
     }
 
@@ -93,8 +114,21 @@ class PostsController extends Controller
     public function update(Request $request, $id)
     {
         //
+        // $post = Post::findOrFail($id);
+        // $post->update($request->all());
+        $input = $request->all();
+
+        if ($file = $request->file('file')) {
+            $name = $file->getClientOriginalName();
+            // create images folder in public folder if it doesnt exist
+            $file->move('images', $name);
+            // path is a column in posts table
+            $input['path'] = $name;
+        }
+
         $post = Post::findOrFail($id);
-        $post->update($request->all());
+        $post->update($input);
+
         return redirect('/posts');
     }
 

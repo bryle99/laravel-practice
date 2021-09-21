@@ -19,8 +19,11 @@ class Post extends Model
     protected $fillable = [
         'user_id',
         'title',
-        'content'
+        'content',
+        'path'
     ];
+
+    public $directory = '/images/';
 
 
     public function user()
@@ -44,5 +47,11 @@ class Post extends Model
     public static function scopeLatestt($query)
     {
         return $query->orderBy('id', 'desc');
+    }
+
+    // accessor 
+    public function getPathAttribute($value)
+    {
+        return $this->directory . $value;
     }
 }
