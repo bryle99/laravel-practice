@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\Photo;
 use App\Models\Video;
 use App\Models\Tag;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -324,4 +325,33 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::resource('posts', '\App\Http\Controllers\PostsController');
+Route::group(['middleware' => 'web'], function () {
+    Route::resource('posts', '\App\Http\Controllers\PostsController');
+
+    Route::get('/dates', function () {
+        $date = new DateTime('+1 week');
+
+        echo $date->format('m-d-Y');
+        echo '<br>';
+        // using carbon
+        echo Carbon::now();
+        echo '<br>';
+        echo Carbon::now()->addDays(10)->diffForHumans();
+        echo '<br>';
+        echo Carbon::now()->subMonths(5)->diffForHumans();
+        echo '<br>';
+        echo Carbon::now()->yesterday()->diffForHumans();
+    });
+
+    Route::get('/getname', function () {
+        $user = User::find(1);
+
+        echo $user->name;
+    });
+
+    Route::get('/setname', function () {
+        $user = User::find(1);
+        $user->name = 'bryle';
+        $user->save();
+    });
+});
